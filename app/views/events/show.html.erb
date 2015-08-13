@@ -10,5 +10,7 @@
   <%= @event.description %>
 </p>
 
-<%= link_to 'Edit', edit_event_path(@event) %> |
-<%= link_to 'Back', events_path %>
+<% if @event.user.id == current_user.id %>
+	<%= link_to 'Edit', edit_event_path(@event) %>
+<% end -%>
+| <%= link_to 'Back', events_path %>

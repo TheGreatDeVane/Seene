@@ -1,5 +1,7 @@
 class UpdatesController < ApplicationController
   before_action :set_update, only: [:show, :edit, :update, :destroy]
+  before_action :owned_post, only: [:edit, :update, :destroy]  
+  before_action :authenticate_user!
 
   # GET /updates
   # GET /updates.json
@@ -14,7 +16,7 @@ class UpdatesController < ApplicationController
 
   # GET /updates/new
   def new
-    @update = Update.new
+    @update = current_user.updates.build
   end
 
   # GET /updates/1/edit
@@ -24,7 +26,7 @@ class UpdatesController < ApplicationController
   # POST /updates
   # POST /updates.json
   def create
-    @update = Update.new(update_params)
+    @update = current_user.updates.build(update_params)
 
     respond_to do |format|
       if @update.save
@@ -71,4 +73,11 @@ class UpdatesController < ApplicationController
     def update_params
       params.require(:update).permit(:title, :description)
     end
+
+    def owned_post  
+      unless current_user == @update.user
+        flash[:alert] = "That post doesn't belong to you!"
+        redirect_to root_path
+      end
+    end  
 end

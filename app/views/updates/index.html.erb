@@ -14,6 +14,7 @@
   <tbody>
     <% @updates.each do |update| %>
       <tr>
+        <td><%= update.user.name %></td>
         <td><%= update.title %></td>
         <td><%= update.description %></td>
         <td><%= link_to 'Show', update %></td>

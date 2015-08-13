@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :owned_post, only: [:edit, :update, :destroy]  
 
   # GET /events
   # GET /events.json
@@ -14,7 +15,7 @@ class EventsController < ApplicationController
 
   # GET /events/new
   def new
-    @event = Event.new
+    @event = current_user.events.build
   end
 
   # GET /events/1/edit
@@ -24,7 +25,7 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.json
   def create
-    @event = Event.new(event_params)
+    @event = current_user.events.build(event_params)
 
     respond_to do |format|
       if @event.save
@@ -71,4 +72,11 @@ class EventsController < ApplicationController
     def event_params
       params.require(:event).permit(:title, :description)
     end
+
+    def owned_post  
+      unless current_user == @event.user
+        flash[:alert] = "That post doesn't belong to you!"
+        redirect_to root_path
+      end
+    end  
 end
