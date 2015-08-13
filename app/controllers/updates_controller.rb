@@ -2,6 +2,7 @@ class UpdatesController < ApplicationController
   before_action :set_update, only: [:show, :edit, :update, :destroy]
   before_action :owned_post, only: [:edit, :update, :destroy]  
   before_action :authenticate_user!
+  load_and_authorize_resource
 
   # GET /updates
   # GET /updates.json
